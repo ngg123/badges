@@ -137,10 +137,10 @@ nzModelBeta <- function(model,lambda){
 }
 
 
-testBadges <- function(){
+testBadges <- function(alpha=1,pctTrain=0.65){
   badges <- importBadgeData()
   nSpar <- makeAllMax(badgeData = badges)
-  glmeta <- trainLogistic(nSpar = nSpar,alpha=0.75,pctTrain=0.65)
+  glmeta <- trainLogistic(nSpar = nSpar,alpha=alpha,pctTrain=pctTrain)
   print(checkModel(nSpar,glmeta$testSet,glmeta$model,glmeta$model$lambda.min))
   nzModelBeta(glmeta$model,glmeta$model$lambda.min)
 }
