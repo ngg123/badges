@@ -16,9 +16,11 @@ As those who are familiar with Elastic Net might expect, the regression works be
 Running the test function (after sourcing badges.R) gives this as a typical result:
 > testBadges(alpha=1)
        y
-x        0  1
-  FALSE 19  0
-  TRUE   0 73
+x      |  0 | 1
+-----------------
+  FALSE| 19 | 0
+  TRUE |  0 |73
+  
    let         val
 1   a0 -0.15109255
 2   e0 -0.04976486
