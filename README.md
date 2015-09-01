@@ -22,7 +22,7 @@ Running the test function (after sourcing badges.R) gives this as a typical resu
   TRUE |  0 |73
   
   
-   let |        val
+coef| let |        val
 ---|----|-------------
 1 |  a0 | -0.15109255
 2 |  e0 | -0.04976486
