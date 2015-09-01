@@ -43,8 +43,10 @@ coef| let |        val
 17 |  e2 | -0.03790973
 
 
-The crosstabulation shows 19 true negatives, 73 true positives, and no false positives or false negatives in the holdout data set (approxiately 35% of the original set).  [Note: There are sometimes a few false positives, depending on which names are sampled for the regression.]  Equally interesting is the sent of features the regression chose for predictions.  
+The crosstabulation shows 19 true negatives, 73 true positives, and no false positives or false negatives in the holdout data set (approxiately 35% of the original set).  [Note: There are sometimes a few false positives, depending on which names are sampled for the regression.  More below.]  Equally interesting is the sent of features the regression chose for predictions.  
 
 All features have weakly negative coefficients, *EXCEPT* for a,e,i,o, and u in the second character of the first name. The vowels have strongly positive coefficients.  Based on this, we can surmise that the 'true' function is that the label '+' is placed on badges when the second letter of the attendee's first name is a vowel, and '-' is placed when the second letter is a consonant.  
 
 It's also interesting to note that there are weekly negative coefficients for the first and third letters of the first name, which suggests that the regression has inadvertently discovered that the first names of people who attend Machine Learning confereneces in the mid 1990's are unlikely to have 'a' or 'e' for the first or third letter when the second letter is a vowel.
+
+One weakness of this approach is that the classifier does not learn that 'vowels' are a feature.  As there are only 11 names with u as the second letter of the first name (compared to 85,28,37, and 49 for a,e,i and o, respectively), any training set without a second-letter u will not learn to associate u with the '+' label--in fact it will usually try to classify on consonants, by giving them larger negative coefficients and the vowels smaller positive coefficients.
