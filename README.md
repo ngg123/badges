@@ -23,24 +23,24 @@ Running the test function (after sourcing badges.R) gives this as a typical resu
   
   
    let |        val
---|----|-------------
-1 |  a0| -0.15109255
-2 |  e0| -0.04976486
-3 |  a1|  9.34296388
-4 |  d1| -0.08895683
-5 |  e1|  8.71469205
-6 |  h1| -0.86992335
-7 |  i1|  8.92423989
-8 |  l1| -0.27893943
-9 |  n1| -0.13082222
-10|  o1|  9.07778198
-11|  r1| -1.01242497
-12|  t1| -0.70022769
-13|  u1|  8.23083841
-14|  y1| -0.13046249
-15|  .1| -0.27931667
-16|  a2| -0.13896379
-17|  e2| -0.03790973
+---|----|-------------
+1 |  a0 | -0.15109255
+2 |  e0 | -0.04976486
+3 |  a1 |  9.34296388
+4 |  d1 | -0.08895683
+5 |  e1 |  8.71469205
+6 |  h1 | -0.86992335
+7 |  i1 |  8.92423989
+8 |  l1 | -0.27893943
+9 |  n1 | -0.13082222
+10 |  o1 |  9.07778198
+11 |  r1 | -1.01242497
+12 |  t1 | -0.70022769
+13 |  u1 |  8.23083841
+14 |  y1 | -0.13046249
+15 |  .1 | -0.27931667
+16 |  a2 | -0.13896379
+17 |  e2 | -0.03790973
 
 
 The crosstabulation shows 19 true negatives, 73 true positives, and no false positives or false negatives in the holdout data set (approxiately 35% of the original set).  [Note: There are sometimes a few false positives, depending on which names are sampled for the regression.]  Equally interesting is the sent of features the regression chose for predictions.  
