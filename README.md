@@ -21,6 +21,7 @@ Running the test function (after sourcing badges.R) gives this as a typical resu
   FALSE| 19 | 0
   TRUE |  0 |73
   
+  
   |let |        val
 --|----|-------------
 1 |  a0| -0.15109255
