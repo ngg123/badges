@@ -65,7 +65,7 @@ makeAllMax <- function(badgeData){
   newMax
 }
 
-trainLogistic <- function(nSpar, alpha=1,pctTrain=0.5){
+trainLogistic <- function(nSpar, alpha=1,pctTrain=0.5,lambdaRatio=0.05){
   #
   # Train a logistic model on the binary vector representation of the names
   #
@@ -86,8 +86,11 @@ trainLogistic <- function(nSpar, alpha=1,pctTrain=0.5){
   #
   # family='binomial' is used to tell glmnet that we want logistic regression instead of linear
   #
-  glmod <- cv.glmnet(nSpar[trainSet,-1],nSpar[trainSet,1],family='binomial',alpha=alpha)
-  
+  glmod <- cv.glmnet(nSpar[trainSet,-1],
+                     nSpar[trainSet,1],
+                     family='binomial',
+                     alpha=alpha,nlambda=100,lambda.min.ratio = lambdaRatio)
+
   list(trainingSet=trainSet,testSet=testSet,model=glmod)
   
 }
@@ -137,10 +140,12 @@ nzModelBeta <- function(model,lambda){
 }
 
 
-testBadges <- function(alpha=1,pctTrain=0.65){
+testBadges <- function(alpha=1,pctTrain=0.65,lambdaRatio=0.05){
   badges <- importBadgeData()
   nSpar <- makeAllMax(badgeData = badges)
-  glmeta <- trainLogistic(nSpar = nSpar,alpha=alpha,pctTrain=pctTrain)
+  glmeta <- trainLogistic(nSpar = nSpar,alpha=alpha,pctTrain=pctTrain,lambdaRatio = lambdaRatio)
   print(checkModel(nSpar,glmeta$testSet,glmeta$model,glmeta$model$lambda.min))
   nzModelBeta(glmeta$model,glmeta$model$lambda.min)
 }
+
+
