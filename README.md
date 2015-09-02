@@ -9,6 +9,9 @@ Spoilers below!
 
 The basic approach here is to treat each character in a name (which consists of up to 4 parts, using the letters a-z, as well as the dash ('-') and dot ('.')) as a factor.  The factors levels are converted to boolean vectors (one vector for each level).  Names contain less than 34 characters, and the alphabet has 28 levels, giving us a feature matrix with 952 dimensions (and only 294 observations!).  
 
+## Learning with Regression
+### (See below for an updated version using ID3 trees)
+
 We will use a very simple linear classifier for this implementation: logistic regression.  The simple logistic regression (as found in R's glm package) will not work very well because our data set has so many dimensions--with 952 degrees of freedom and only 294 observations, it is very easy to overfit.  Instead, we will use penalized linear regression from the glmnet package, which allow a linear combination of the Ridge (L2) penalty and LASSO (L1) penalty.
 
 As those who are familiar with Elastic Net might expect, the regression works better with heavier weight on the LASSO penalty because we primarilly want to eliminate redundant degrees of freedom.
@@ -50,3 +53,8 @@ All features have weakly negative coefficients, *EXCEPT* for a,e,i,o, and u in t
 It's also interesting to note that there are weekly negative coefficients for the first and third letters of the first name, which suggests that the regression has inadvertently discovered that the first names of people who attend Machine Learning confereneces in the mid 1990's are unlikely to have 'a' or 'e' for the first or third letter when the second letter is a vowel.
 
 One weakness of this approach is that the classifier does not learn that 'vowels' are a feature.  As there are only 11 names with u as the second letter of the first name (compared to 85,28,37, and 49 for a,e,i and o, respectively), any training set without a second-letter u will not learn to associate u with the '+' label--in fact it will usually try to classify on consonants, by giving them larger negative coefficients and the vowels smaller positive coefficients.
+
+## Learning with Decision Trees
+### (ID3 implementation)
+
+The ID3 algorithm is surprisingly fast and much more robust on this dataset.
