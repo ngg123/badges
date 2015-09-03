@@ -1,7 +1,7 @@
 library(foreach)
 
 
-# source('./badges.R')
+
 
 #
 # Set is assumed to be a {sparse} matrix with one observation per row
@@ -80,7 +80,7 @@ becomeTree <- function(set,usedAttributes=c(1)){
 testTree <- function(){
   badges <- importBadgeData()
   nSpar <- makeAllMax(badgeData = badges)
-  classifier <- becomeTree(nSpar[1:200,])
+  classifier <- becomeTree(nSpar[1:200,1:56])
   preds <- foreach(i = 201:nrow(nSpar),.combine=c) %do% {
     classifier(nSpar[i,])
   }
