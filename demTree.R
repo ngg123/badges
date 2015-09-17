@@ -68,8 +68,8 @@ becomeTree <- function(set,usedAttributes=c(1)){
 #     print(letters[coln-1-28])
     seg <- set[,coln]==0
     
-    f0 <- becomeTree(set[ seg,],usedAttributes = c(usedAttributes,coln))
-    f1 <- becomeTree(set[!seg,],usedAttributes = c(usedAttributes,coln))
+    f0 <- becomeTree(subset(set, seg),usedAttributes = c(usedAttributes,coln))
+    f1 <- becomeTree(subset(set,!seg),usedAttributes = c(usedAttributes,coln))
     retVal <- buildNode(coln,childFun = c(f0,f1))
   }
   retVal
