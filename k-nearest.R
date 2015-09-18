@@ -7,7 +7,13 @@ BASE_DAT_DIR <- './data/tic-tac-toe/'
 runKNN <- function(){
   trainingDat <- featurizer(getTestData())
   testDat <- featurizer(getTrainData())
-  sum(unlist(xval(trainingDat = trainingDat)))/nrow(trainingDat)
+  xvalRunTime <-  system.time(xvalNums <- sum(xval(trainingDat)[,'numGood'])/
+                nrow(trainingDat))['elapsed']
+  
+  testGood <- sum(validate(testDat,trainingDat ))/nrow(testDat)
+  print(paste0('6-fold x-validation clock time: ',round(xvalRunTime,digits = 3),' seconds'))
+  print(paste0('6-fold x-val % correct: ',round(xvalNums,digits=1)*100))
+  print(paste0('test data % correct: ',round(testGood,digits=1)*100))  
 }
 
 
@@ -20,11 +26,6 @@ getTrainData <- function(){
 
 getTestData <- function(){
   read.csv(paste0(BASE_DAT_DIR,BASE_DAT_FNAME,'test.txt'),header=F)
-}
-
-classify <- function(obs,trainingDat){
-  dist <- apply(trainingDat,1,function(tr)hamDist(obs,tr))
-  trainingDat[which.max(dist),1]
 }
 
 featurizer <- function(mat){
@@ -42,23 +43,28 @@ hamDist <- function(newDat,oldDat){
   sum(!(xor(oldDat,newDat)))
 }
 
+classify <- function(obs,trainingDat,n=1){
+  dist <- apply(trainingDat,1,function(tr)hamDist(obs,tr))
+  topSamp <- order(dist,decreasing = T)
+  trainingDat[topSamp[1],1]
+}
 
-
-validate <- function(obs,trainingDat){!xor(classify(obs,trainingDat),(obs[1]))}
+validate <- function(obs,trainingDat){
+  f <- function(obsp){!xor(classify(matrix(obsp,ncol=ncol(obs)),trainingDat),(obsp[1]))}
+  matrix(apply(obs,1,f),ncol=1)
+}
 
 xval <- function(trainingDat){
   nums <- rep(1:6,ceiling(nrow(trainingDat)/6))[1:nrow(trainingDat)]
   sets <- sample(nums,nrow(trainingDat),replace = F)
-  foreach(i=1:6,.combine=c,
-          .packages = 'foreach',
+  foreach(i=1:6,.combine=rbind,
           .export = c('validate','classify','hamDist')
   ) %dopar% {
     holdout <- which(sets==i)
     train <- setdiff(1:nrow(trainingDat),holdout)
-    sum(
-      foreach(j=holdout,.combine=c) %do% { 
-        validate(trainingDat[j,],trainingDat[train,])
-      }
+    data.frame(i=i,numGood=sum(validate(trainingDat[holdout,,drop=F],
+                                  trainingDat[train,,drop=F]))
+      
     )
   } 
 }
