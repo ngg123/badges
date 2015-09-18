@@ -1,12 +1,12 @@
 library(foreach)
 
-
+source('./badges.R')
 
 
 #
 # Set is assumed to be a {sparse} matrix with one observation per row
 #
-
+# 
 calcGain <- function(set,coln){
   dem <- nrow(set)  
   noom <- sum(set[,1])
@@ -27,11 +27,44 @@ calcGain <- function(set,coln){
 }
 
 infoEntrop <- function(n,p){
-  # Thar logarithm twernt takin a likeing to the zeros
+  # Thar logarithm twernt takin a like'n to them zaros
   if(any(c(n,p)==0)){0} else {
     -n*log(n)/log(2) - p*log(p)/log(2)
   }
 }
+
+
+multiCalcGain <- function(set,coln){
+  dem <- nrow(set)  
+  ps <- foreach(i=unique(set[,1]),.combine=c) %do% {
+    noom <- sum(set[,1]==i)
+    p <- noom / dem
+  }
+
+  baseEntrop <- multiInfoEntrop(ps)
+  
+  retVal <- foreach(val = unique(set[,coln]),.combine = sum) %do% {
+    dem.s <- sum(set[,coln]==val)
+    s.v <- set[set[,coln]==val,,drop=F]
+    ps.v <- foreach(i=unique(s.v[,1]),.combine=c) %do% {
+      noom.s <- sum(s.v[,1]==i)
+      p.s <- noom.s / dem.s
+      
+    }
+
+    retVal <- sum(set[,coln]== val)/dem * multiInfoEntrop(ps.v)
+    retVal
+  }  
+  baseEntrop - retVal
+}
+
+multiInfoEntrop <- function(labs){
+  foreach(i=labs,.combine=sum) %do% {
+    if(i==0) 0 else -i*log(i)/log(2)
+  }
+}
+
+
 
 #
 # Note: The first column is assumed to be the observation label
@@ -40,7 +73,7 @@ chooseAttribute <- function(set,usedAttributes){
   availableAttributes <- setdiff(1:ncol(set),usedAttributes)
   
   gains <- foreach(att = availableAttributes,.combine = c) %do% {
-    calcGain(set,att)
+    multiCalcGain(set,att)
   }
   
   availableAttributes[which.max(gains)]

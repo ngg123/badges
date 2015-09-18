@@ -4,7 +4,7 @@ library(glmnet)
 # http://svivek.com/teaching/machine-learning/fall2015/data/badges.txt
 
 importBadgeData <- function(){
-  badges <- read.csv('../Downloads/badges.txt',header=F,stringsAsFactors = F, sep=' ')
+  badges <- read.csv('./data/badges.txt',header=F,stringsAsFactors = F, sep=' ')
   
   #
   # Some people don't have middle names

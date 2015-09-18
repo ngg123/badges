@@ -1,12 +1,12 @@
 library(foreach)
 
-
+source('./dataSourcer.R')
 BASE_DAT_FNAME <- '/tic-tac-toe-'
 BASE_DAT_DIR <- './data/tic-tac-toe/'
 
 runKNN <- function(){
-  trainingDat <- featurizer(getTrainData())
-  testDat <- featurizer(getTestData())
+  trainingDat <- featurizer.TicTac(getTicTacTrainData())
+  testDat <- featurizer.TicTac(getTicTacTestData())
   xvalRunTime <-  system.time(xvalNums <- sum(xval(trainingDat)[,'numGood'])/
                 nrow(trainingDat))['elapsed']
   
@@ -14,27 +14,6 @@ runKNN <- function(){
   print(paste0('6-fold x-validation clock time: ',round(xvalRunTime,digits = 3),' seconds'))
   print(paste0('6-fold x-val % correct: ',round(xvalNums,digits=4)*100))
   print(paste0('test data % correct: ',round(testGood,digits=4)*100))  
-}
-
-
-getTrainData <- function(){
-  foreach(i=1:6,.combine=rbind) %do% {
-    read.csv(paste0(BASE_DAT_DIR,BASE_DAT_FNAME,'train-',i,'.txt'),header=F)
-  }
-  
-}
-
-getTestData <- function(){
-  read.csv(paste0(BASE_DAT_DIR,BASE_DAT_FNAME,'test.txt'),header=F)
-}
-
-featurizer <- function(mat){
-  cbind(mat[,'V10']=='positive',
-        foreach(i=1:(ncol(mat)-1),.combine=cbind) %do% {
-          xs <- mat[,i]=='x'
-          os <- mat[,i]=='o'
-          cbind(xs,os)
-        })
 }
 
 hamDist <- function(newDat,oldDat){
@@ -59,7 +38,7 @@ xval <- function(trainingDat){
   sets <- sample(nums,nrow(trainingDat),replace = F)
   foreach(i=1:6,.combine=rbind,
           .export = c('validate','classify','hamDist')
-  ) %dopar% {
+  ) %do% {
     holdout <- which(sets==i)
     train <- setdiff(1:nrow(trainingDat),holdout)
     data.frame(i=i,numGood=sum(validate(trainingDat[holdout,,drop=F],
