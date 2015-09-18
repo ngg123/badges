@@ -5,15 +5,15 @@ BASE_DAT_FNAME <- '/tic-tac-toe-'
 BASE_DAT_DIR <- './data/tic-tac-toe/'
 
 runKNN <- function(){
-  trainingDat <- featurizer(getTestData())
-  testDat <- featurizer(getTrainData())
+  trainingDat <- featurizer(getTrainData())
+  testDat <- featurizer(getTestData())
   xvalRunTime <-  system.time(xvalNums <- sum(xval(trainingDat)[,'numGood'])/
                 nrow(trainingDat))['elapsed']
   
   testGood <- sum(validate(testDat,trainingDat ))/nrow(testDat)
   print(paste0('6-fold x-validation clock time: ',round(xvalRunTime,digits = 3),' seconds'))
-  print(paste0('6-fold x-val % correct: ',round(xvalNums,digits=1)*100))
-  print(paste0('test data % correct: ',round(testGood,digits=1)*100))  
+  print(paste0('6-fold x-val % correct: ',round(xvalNums,digits=4)*100))
+  print(paste0('test data % correct: ',round(testGood,digits=4)*100))  
 }
 
 
