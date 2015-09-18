@@ -23,9 +23,7 @@ getTestData <- function(){
 }
 
 classify <- function(obs,trainingDat){
-  dist <- foreach(i=1:nrow(trainingDat),.combine=c) %do% {
-    hamDist(obs,trainingDat[i,])
-  }
+  dist <- apply(trainingDat,1,function(tr)hamDist(obs,tr))
   trainingDat[which.max(dist),1]
 }
 
