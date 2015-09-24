@@ -33,6 +33,7 @@ validate <- function(obs,trainingDat){
   matrix(apply(obs,1,f),ncol=1)
 }
 
+# cross-validation
 xval <- function(trainingDat){
   nums <- rep(1:6,ceiling(nrow(trainingDat)/6))[1:nrow(trainingDat)]
   sets <- sample(nums,nrow(trainingDat),replace = F)
