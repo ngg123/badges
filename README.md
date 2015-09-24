@@ -1,4 +1,7 @@
 # badges
+
+__UPDATE: Now with decision trees and k-nearest neighbors!__
+
 Toy Machine Learning on Badges data from a 1994 Computational Learning Theory conference.
 
 Per the slides at http://svivek.com/teaching/machine-learning/fall2015/lectures/01-intro.html , attendees at a ML conference were given badges labeled with '+' and '-' and instructed to learn the function used to generate the labels.  Attendees were given the hint that the label was a function of only the name on the badge.
