@@ -80,7 +80,7 @@ chooseAttribute <- function(set,usedAttributes){
 }
 
 #
-# TODO: generalize to non-binary trees
+#
 #
 buildNode <- function(coln,childFun=list(function(obs){0},function(obs){1})){
   # Return a function that takes an observation (vector of booleans represented as 0/1)
