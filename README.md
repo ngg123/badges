@@ -54,7 +54,13 @@ It's also interesting to note that there are weekly negative coefficients for th
 
 One weakness of this approach is that the classifier does not learn that 'vowels' are a feature.  As there are only 11 names with u as the second letter of the first name (compared to 85,28,37, and 49 for a,e,i and o, respectively), any training set without a second-letter u will not learn to associate u with the '+' label--in fact it will usually try to classify on consonants, by giving them larger negative coefficients and the vowels smaller positive coefficients.
 
-## Learning with Decision Trees
-### (ID3 implementation)
+## Learning with ID3 and kNN
 
-The ID3 algorithm is surprisingly fast and much more robust on this dataset.
+Homework #1 for C6350 Fall 2015 asks to build two classifiers: a k-nearest-neighbors classifier and a decision tree classifier using the ID3 algorithm.
+
+ID3 and kNN classifiers have been added to the repo, and work much better than logistic regression on both badges data and a tic-tac-toe dataset prepared by Dr. Vivek S.  Both ID3 and kNN achieve close to 100% correct classification in cross-validation and on a separate test dataset.  
+
+The tree classifier takes a matrix of features and labels (the first column of the matrix is assumed to be the label and all other columns are features).  The becomeTree() function uses recursion and anonymous functions to build a decision tree classifier (there is no separate data structure to hold the decisions at each level, which does have the disadvantage of making it's decisions somewhat opaque).
+
+The kNN classifier uses the hamming distance to compare points.
+
