@@ -10,8 +10,9 @@ I've slightly adjusted the file structure:
 * demTree.R: mostly functions for implementing an ID3 decision tree
 * k-nearest.R: mostly functions for implementing k-nearest neighbors, but also has cross-validation and validation functions.
 
-TODO: further refactor functions into appropriate files
-
+TODO: 
+* further refactor functions into appropriate files
+* becomeTree() doesn't /quite/ support multiple feature levels yet (fix this)
 
 
 

@@ -3,37 +3,10 @@ library(foreach)
 source('./badges.R')
 
 
-#
-# Set is assumed to be a {sparse} matrix with one observation per row
-#
 # 
-calcGain <- function(set,coln){
-  dem <- nrow(set)  
-  noom <- sum(set[,1])
-  p <- noom / dem
-  n <- (dem - noom) / dem
-  baseEntrop <- infoEntrop(n,p)
-  
-  retVal <- foreach(val = unique(set[,coln]),.combine = sum) %do% {
-    dem.s <- sum(set[,coln]==val)
-    s.v <- matrix(set[set[,coln]==val,],nrow=dem.s)
-    noom.s <- sum(s.v[,1])
-    p.s <- noom.s / dem.s
-    n.s <- (dem.s - noom.s)/dem.s
-    retVal <- sum(set[,coln]== val)/dem * infoEntrop(n.s,p.s)
-    retVal
-  }  
-  baseEntrop - retVal
-}
-
-infoEntrop <- function(n,p){
-  # Thar logarithm twernt takin a like'n to them zaros
-  if(any(c(n,p)==0)){0} else {
-    -n*log(n)/log(2) - p*log(p)/log(2)
-  }
-}
-
-
+# Calculate information gain of the feature represented by
+# the column coln of the dataset matrix
+# 
 multiCalcGain <- function(set,coln){
   dem <- nrow(set)  
   ps <- foreach(i=unique(set[,1]),.combine=c) %do% {
@@ -58,6 +31,9 @@ multiCalcGain <- function(set,coln){
   baseEntrop - retVal
 }
 
+#
+# Calculate information entropy
+#
 multiInfoEntrop <- function(labs){
   foreach(i=labs,.combine=sum) %do% {
     if(i==0) 0 else -i*log(i)/log(2)
@@ -88,11 +64,20 @@ buildNode <- function(coln,childFun=list(function(obs){0},function(obs){1})){
   function(obs){childFun[[obs[coln]+1]](obs)}
 }
 
+
 becomeTree <- function(set,usedAttributes=c(1)){
   
   if(length(unique(set[,1]))==1){
+    #
+    # If the data contains only a single label, return a lambda
+    # that predicts that label for any input.
+    #
     retVal <- function(obs){set[[1,1]]}
   } else {
+    #
+    # If mutiple lables are present in data, pick the one with
+    # the greatest information gain
+    #
     coln <- chooseAttribute(set,usedAttributes)
 #     print("used attributes:")
 #     print(usedAttributes)
@@ -101,9 +86,15 @@ becomeTree <- function(set,usedAttributes=c(1)){
 #     print(letters[coln-1-28])
 
     seg <- set[,coln]==0
-    
+
+    #
+    # recurse down the tree
+    #
     f0 <- becomeTree(subset(set, seg),usedAttributes = c(usedAttributes,coln))
     f1 <- becomeTree(subset(set,!seg),usedAttributes = c(usedAttributes,coln))
+    #
+    # return a lambda that predicts a label based on the column coln
+    #
     retVal <- buildNode(coln,childFun = c(f0,f1))
   }
   retVal
