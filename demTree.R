@@ -99,6 +99,7 @@ becomeTree <- function(set,usedAttributes=c(1)){
 #     print("next attribute")
 #     print(coln)
 #     print(letters[coln-1-28])
+
     seg <- set[,coln]==0
     
     f0 <- becomeTree(subset(set, seg),usedAttributes = c(usedAttributes,coln))
