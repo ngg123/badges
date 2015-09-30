@@ -33,7 +33,16 @@ winnow.update <- function(ws,x,y,RATE=2){
 
 
 bwinn.update <- function(wspn,x,y,RATE=2){
-  wsp <- wspn$p
-  wsn <- wspn$n
-  
+  wsp <- wspn[1:(length(wspn)/2)]
+  wsn <- wspn[(length(wspn)/2+1):length(wspn)]
+  good.pred <- predict.hyper((wsp-wsn),x,thresh=length(ws))==y
+  wspn*good.pred +
+    (!good.pred)*(y > 0)*c(winnow.promote(wsp,x,RATE), 
+                           winnow.demote(wsn,x,RATE)) +
+    (!good.pred)*(y <= 0)*c(winnow.demote(wsp,x,RATE),
+                            winnow.promote(wsn,x,RATE))
+    
 }
+
+
+
